@@ -1,0 +1,78 @@
+Option Explicit
+
+Sub Bonus()
+Dim ws As Worksheet
+
+Dim High_Stock As String
+Dim Low_Stock As String
+
+Dim High_Pct As Double
+Dim Low_Pct As Double
+Dim High_vol As Long
+
+Dim Last_row As Long
+
+Dim i As Long
+Dim j As Integer
+Dim k As Integer
+
+    For Each ws In Worksheets
+       
+        ws.Cells(1, 15).Value = "Ticker"
+        ws.Cells(1, 16).Value = "Value"
+        ws.Cells(2, 14).Value = "Greatest % Increase"
+        ws.Cells(3, 14).Value = "Greatest % Decrease"
+        ws.Cells(4, 14).Value = "Greatest Total Volume"
+
+        
+        ' Set paste offset, highest number, lowest number variables to zero
+        k = 0
+        High_Pct = 0
+        Low_Pct = 0
+        ' Determine number of rows in sheet
+        Last_row = ws.Cells(Rows.Count, 9).End(xlUp).Row
+        
+        ' Loop over columns
+        For j = 11 To 12
+            ' Loop over rows
+            For i = 2 To Last_row
+                'Test to see if current row value is higher than stored
+                If ws.Cells(i, j).Value > High_Stock Then
+                    ' If row considered is higher, make it the new topdog, and grab its name
+                    High_Pct = ws.Cells(i, j).Value
+                    High_Stock = ws.Cells(i, 9).Value
+                Else
+                End If
+                ' Now check to see if the row considered is lower than lowest value
+                ' If it is, make it the new underdog and grab its name
+                If ws.Cells(i, j).Value < Low_Pct Then
+                    Low_Pct = ws.Cells(i, j).Value
+                    Low_Stock = ws.Cells(i, 9).Value
+                Else
+                End If
+                
+            Next i
+        ' After checking all rows, print the topdog number and its ticker name
+        ws.Cells(2 + k, 15).Value = High_Stock
+        ws.Cells(2 + k, 16).Value = High_Pct
+        ' Same with underdog
+        ws.Cells(3 + k, 15).Value = Low_Stock
+        ws.Cells(3 + k, 16).Value = Low_Pct
+        
+        ' Reset all variables
+        High_Stock = "None"
+        Low_Stock = "None"
+        High_Pct = 0
+        Low_Pct = 0
+        ' Increment paste offset so next paste happens below
+        k = k + 2
+        Next j
+    ' Erase last row of readout, not relevant
+    ws.Range("N5:P5").Value = ""
+    ' Change percent change values to proper format
+    ws.Range("P2:P3").NumberFormat = "0.00%"
+    Next ws
+End Sub
+        
+    
+    

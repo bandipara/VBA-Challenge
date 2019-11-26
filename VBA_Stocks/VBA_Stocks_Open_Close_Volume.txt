@@ -1,0 +1,61 @@
+Option Explicit
+
+Sub StockSummary():
+    
+    Dim ws As Worksheet
+    Dim i As Long
+    Dim LstRow As Long
+    Dim TotVol As Double
+    Dim PasteOffset As Integer
+    PasteOffset = 2
+    Dim YrOpen As Double
+    Dim YrClose As Double
+    Dim PctChg As Double
+    Dim NextTkr As Integer
+    NextTkr = 0
+    Dim YrChg As Double
+    
+    For Each ws In Worksheets
+        ws.Cells(1, 9).Value = "Ticker"
+        ws.Cells(1, 10).Value = "Yearly Change"
+        ws.Cells(1, 11).Value = "Percent Change"
+        ws.Cells(1, 12).Value = "Total volume"
+        LstRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+        
+        For i = 2 To LstRow
+            If ws.Cells(i, 1) = ws.Cells(i, 1).Offset(1, 0) Then
+                NextTkr = NextTkr + 1
+                TotVol = TotVol + ws.Cells(i, 7)
+                If NextTkr = 1 Then
+                    YrOpen = ws.Cells(i, 3)
+                Else
+                End If
+            Else
+                TotVol = TotVol + ws.Cells(i, 7)
+                ws.Cells(PasteOffset, 9) = ws.Cells(i, 1)
+                ws.Cells(PasteOffset, 12) = TotVol
+                YrClose = ws.Cells(i, 6)
+                If YrOpen <> 0 Then
+                    PctChg = ((YrClose - YrOpen) / YrOpen)
+                    YrChg = YrClose - YrOpen
+                Else
+                    PctChg = 0
+                    YrChg = 0
+                End If
+                ws.Cells(PasteOffset, 11) = PctChg
+                ws.Cells(PasteOffset, 11).NumberFormat = "0.00%"
+                ws.Cells(PasteOffset, 10) = YrChg
+                    If ws.Cells(PasteOffset, 10).Value > 0 Then
+                        ws.Cells(PasteOffset, 10).Interior.ColorIndex = 4
+                    Else
+                        ws.Cells(PasteOffset, 10).Interior.ColorIndex = 3
+                    End If
+                TotVol = 0
+                PasteOffset = PasteOffset + 1
+                NextTkr = 0
+            End If
+        Next i
+    PasteOffset = 2
+    Next ws
+End Sub
+

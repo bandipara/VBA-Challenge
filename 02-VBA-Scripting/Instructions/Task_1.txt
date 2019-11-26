@@ -1,0 +1,81 @@
+Option Explicit
+
+Sub Stock_Market()
+
+Dim ws As Worksheet
+Dim Ticker As String
+Dim vol As Double
+Dim Year_Open As Double
+Dim Year_Close As Double
+Dim Yearly_change As Double
+Dim Percent_change As Double
+Dim Total_volume As Long
+Dim Last_row As Long
+Dim Last_Column As Long
+Dim i As Long
+Dim j As Integer
+Dim New_Ticker As Integer
+
+New_Ticker = 0
+Total_volume = 0
+j = 2
+
+Last_row = Range("A" & Rows.Count).End(xlUp).Select
+
+For Each ws In Worksheets
+    Cells(1, 9) = "Ticker"
+    Cells(1, 10) = "Yearly_change"
+    Cells(1, 11) = "Percent_change"
+    Cells(1, 12) = "Total_volume"
+
+For i = 2 To Last_row
+    If ws.Cells(i, 1) = ws.Cells(i, 1).Offset(1, 0) Then
+        New_Ticker = New_Ticker + 1
+        Total_volume = Total_volume + Cells(i, 7)
+        If New_Ticker = 1 Then
+            Year_Open = ws.Cells(i, 3)
+        End If
+        
+    Else
+        Total_volume = Total_volume + ws.Cells(i, 7)
+        ws.Cells(j, 9) = ws.Cells(i, 1)
+        ws.Cells(j, 12) = Total_volume
+        Year_Close = ws.Cells(i, 6)
+        
+        If Year_Open <> 0 Then
+            Yearly_change = Year_Close - Year_Open
+            Percent_change = Yearly_change / Year_Open
+        Else
+            Percent_change = 0
+            Yearly_change = 0
+        End If
+        
+        ws.Cells(j, 11) = Percent_change
+        ws.Cells(j, 11).NumberFormat = "0.00%"
+        ws.Cells(j, 10) = Yearly_change
+        
+             If ws.Cells(j, 10).Value > 0 Then
+                        ws.Cells(j, 10).Interior.ColorIndex = 4
+                    Else
+                        ws.Cells(j, 10).Interior.ColorIndex = 3
+                    End If
+                
+                Total_volume = 0
+                
+                j = j + 1
+                
+                New_Ticker = 0
+            End If
+        Next i
+ 
+    j = 2
+ 
+    Next ws
+    MsgBox "Done"
+End Sub
+
+            
+        
+        
+        
+        

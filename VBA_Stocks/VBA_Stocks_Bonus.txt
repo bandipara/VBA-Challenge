@@ -1,0 +1,57 @@
+Sub Bonus():
+    Dim i As Long
+    Dim j As Integer
+    Dim HighPct As Double
+    Dim LowPct As Double
+    Dim LstRow As Long
+    Dim ws As Worksheet
+    Dim HighStk As String
+    Dim LowStk As String
+    Dim PstOS As Integer
+
+    For Each ws In Worksheets
+        ws.Cells(1, 15).Value = "Ticker"
+        ws.Cells(1, 16).Value = "Value"
+        ws.Cells(2, 14).Value = "Greatest % Increase"
+        ws.Cells(3, 14).Value = "Greatest % Decrease"
+        ws.Cells(4, 14).Value = "Greatest Total Volume"
+        ws.Cells(5, 14).Value = "Least Total Volume"
+        
+
+        PstOS = 0
+        HighPct = 0
+        LowPct = 0
+        LstRow = ws.Cells(Rows.Count, 9).End(xlUp).Row
+        
+        For j = 11 To 12
+            For i = 2 To RowNum
+                If ws.Cells(i, j).Value > HighPct Then
+                    HighPct = ws.Cells(i, j).Value
+                    HighStk = ws.Cells(i, 9).Value
+                Else
+                End If
+                If ws.Cells(i, j).Value < LowPct Then
+                    LowPct = ws.Cells(i, j).Value
+                    LowStk = ws.Cells(i, 9).Value
+                Else
+                End If
+                
+            Next i
+
+        ws.Cells(2 + PstOS, 15).Value = HighStk
+        ws.Cells(2 + PstOS, 16).Value = HighPct
+        ws.Cells(3 + PstOS, 15).Value = LwTicker
+        ws.Cells(3 + PstOS, 16).Value = LowStk
+        HighStk = "None"
+        LowStk = "None"
+        HighPct = 0
+        LowStk = 0
+        PstOS = PstOS + 2
+        Next j
+    ws.Range("N5:P5").Value = ""
+    ws.Range("P2:P3").NumberFormat = "0.00%"
+    Next ws
+End Sub
+
+    
+
